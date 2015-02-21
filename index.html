@@ -1,1 +1,235 @@
-default
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Visualizing Process Capability</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Visualizing Process Capability">
+  <meta name="author" content="R. Zolock">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Visualizing Process Capability</h1>
+    <h2>An explanation of a Shiny application</h2>
+    <p>R. Zolock<br/>Coursera JHU Data Science Specialization</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>An overview</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Processes are ubiquitous in our lives.  The process capability visualization app provides an interactive plot of a standard normal distribution that shows the capability of the process for different sigma levels and process standard deviations.</p>
+
+<p>The sigma measure is a famous metric of process capability.  It was developed because process variation impacts customers as defects in products. </p>
+
+<p>A six sigma process is nearly flawless.</p>
+
+<table><thead>
+<tr>
+<th>range</th>
+<th>% in specs</th>
+<th>defects (ppm)</th>
+<th>out of range</th>
+<th>daily event freq</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(\mu +/- 1 \sigma\)</td>
+<td>68.27%</td>
+<td>317,300</td>
+<td>1 in 3</td>
+<td>twice a week</td>
+</tr>
+<tr>
+<td>\(\mu +/- 2 \sigma\)</td>
+<td>95.45%</td>
+<td>45,500</td>
+<td>1 in 22</td>
+<td>every 3 weeks</td>
+</tr>
+<tr>
+<td>\(\mu +/- 3 \sigma\)</td>
+<td>99.73%</td>
+<td>2,700</td>
+<td>1 in 370</td>
+<td>yearly</td>
+</tr>
+<tr>
+<td>\(\mu +/- 4 \sigma\)</td>
+<td>99.9937%</td>
+<td>63</td>
+<td>1 in 15,787</td>
+<td>every 43 years</td>
+</tr>
+<tr>
+<td>\(\mu +/- 5 \sigma\)</td>
+<td>99.999943%</td>
+<td>0.57</td>
+<td>1 in 1,744,278</td>
+<td>every 5,000 yrs</td>
+</tr>
+<tr>
+<td>\(\mu +/- 6 \sigma\)</td>
+<td>99.9999998%</td>
+<td>0.002</td>
+<td>1 in 506,842,372</td>
+<td>every 1.5M years</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>The plot</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The plot shows a normal distribution or process outcomes.  </p>
+
+<p>Outcomes that meet process specifications are illustrated by the part of the graph in green.</p>
+
+<p>Outcomes ouside of specification limits, and considered defects, are illustrated in grey.</p>
+
+<p>Changing the sigma slides adjusts the amount of the process that is within specifications.  </p>
+
+<p>Changing the standard deviation slider adjusts the variability of the modeled process.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Code</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The standard normal distribution was generated using the dnorm function.</p>
+
+<pre><code class="r">mu = 0  # mean of the distribution
+sd = as.numeric(input$sd)  # slider provides input value for standard deviation
+sigma = as.numeric(input$sigma)  # slider provides input value for sigma
+
+x &lt;- seq(min, max, 0.001)  # create the x vector
+
+y &lt;- dnorm(x, mu, sd)  # generate the normal distribution and 
+df &lt;- data.frame(x = x, y = y)  # move it to a data frame
+</code></pre>
+
+<p>Polygons were used to to fill in the different parts of the graph.  </p>
+
+<p>The plot was created in ggplot2</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>References</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>I found the information at the following links especially helpful in developing the process capability app.  </p>
+
+<p><a href="http://rpsychologist.com">link to Kristoffer Magnusson&#39;s blog about R, psychology, and data visualization</a></p>
+
+<p><a href="http://msenux.redwoods.edu/math/R/normal.php">link to College of the Redwoods page on the normal distribution</a></p>
+
+<p><a href="http://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCAQFjAA&amp;url=http%3A%2F%2Fwww3.nd.edu%2F%7Ekmatta%2FBAMG30700%2FLectures%2FLect%25206%2520-%2520Process%2520Capability.ppt&amp;ei=QQTpVLnSGsaqNvHAgpgE&amp;usg=AFQjCNEPYaJoBljVG8cCTgPYqkLHfhe7YQ&amp;sig2=V3csLguiCdbkqp-xWGpIXQ&amp;bvm=bv.86475890,d.eXY">link to download PowerPoint presentation on process capability from the University of Notre Dame</a></p>
+
+<p><a href="http://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCkQFjAA&amp;url=http%3A%2F%2Fweb.stanford.edu%2Fclass%2Fmsande269%2Fnotes%2F3-16-01_Six_Sigma.ppt&amp;ei=iwTpVPSoJceZNsDFgpAM&amp;usg=AFQjCNGRhNBMMJC0EOdzi4ooW5TMCUSFZQ&amp;sig2=unPWKacTCLXTMbG26bhmNw&amp;bvm=bv.86475890,d.eXY">link to download PowerPoint presentation on six sigma from Stanford University</a></p>
+
+<p>Additionally, the following textbook was used:
+<strong>Practitioner&#39;s Guide to Statistics and Lean Six Sigma for Process Improvements</strong> by Mikel J. Harry, Prem S. Mann, Ofelia C. De Hodgins, Richard L. Hulbert, and Christopher J. Lacke.  Published in 2010 by Wiley.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='An overview'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='The plot'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Code'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='References'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

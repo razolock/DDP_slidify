@@ -1,0 +1,87 @@
+---
+title       : Visualizing Process Capability
+subtitle    : An explanation of a Shiny application
+author      : R. Zolock
+job         : Coursera JHU Data Science Specialization
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [mathjax]     # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## An overview
+
+Processes are ubiquitous in our lives.  The process capability visualization app provides an interactive plot of a standard normal distribution that shows the capability of the process for different sigma levels and process standard deviations.
+
+The sigma measure is a famous metric of process capability.  It was developed because process variation impacts customers as defects in products. 
+
+A six sigma process is nearly flawless.
+
+range               | % in specs    | defects (ppm) | out of range | daily event freq
+------------------  | ------------- | ------------- | ------------ | ----------------
+$\mu +/- 1 \sigma$ | 68.27%         | 317,300 | 1 in 3             | twice a week
+$\mu +/- 2 \sigma$ | 95.45%         | 45,500  | 1 in 22            | every 3 weeks
+$\mu +/- 3 \sigma$ | 99.73%         | 2,700   | 1 in 370           | yearly
+$\mu +/- 4 \sigma$ | 99.9937%       | 63      | 1 in 15,787        | every 43 years
+$\mu +/- 5 \sigma$ | 99.999943%     | 0.57    | 1 in 1,744,278     | every 5,000 yrs
+$\mu +/- 6 \sigma$ | 99.9999998%    | 0.002   | 1 in 506,842,372   | every 1.5M years
+
+---
+
+## The plot
+The plot shows a normal distribution or process outcomes.  
+
+Outcomes that meet process specifications are illustrated by the part of the graph in green.
+
+Outcomes ouside of specification limits, and considered defects, are illustrated in grey.
+
+Changing the sigma slides adjusts the amount of the process that is within specifications.  
+
+Changing the standard deviation slider adjusts the variability of the modeled process.
+
+---
+
+## Code
+
+The standard normal distribution was generated using the dnorm function.
+
+
+```r
+mu = 0  # mean of the distribution
+sd = as.numeric(input$sd)  # slider provides input value for standard deviation
+sigma = as.numeric(input$sigma)  # slider provides input value for sigma
+
+x <- seq(min, max, 0.001)  # create the x vector
+
+y <- dnorm(x, mu, sd)  # generate the normal distribution and 
+df <- data.frame(x = x, y = y)  # move it to a data frame
+```
+
+
+Polygons were used to to fill in the different parts of the graph.  
+
+The plot was created in ggplot2
+
+---
+
+## References
+
+I found the information at the following links especially helpful in developing the process capability app.  
+
+[link to Kristoffer Magnusson's blog about R, psychology, and data visualization](http://rpsychologist.com)
+
+[link to College of the Redwoods page on the normal distribution](http://msenux.redwoods.edu/math/R/normal.php)
+
+[link to download PowerPoint presentation on process capability from the University of Notre Dame](http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CCAQFjAA&url=http%3A%2F%2Fwww3.nd.edu%2F~kmatta%2FBAMG30700%2FLectures%2FLect%25206%2520-%2520Process%2520Capability.ppt&ei=QQTpVLnSGsaqNvHAgpgE&usg=AFQjCNEPYaJoBljVG8cCTgPYqkLHfhe7YQ&sig2=V3csLguiCdbkqp-xWGpIXQ&bvm=bv.86475890,d.eXY)
+
+[link to download PowerPoint presentation on six sigma from Stanford University](http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CCkQFjAA&url=http%3A%2F%2Fweb.stanford.edu%2Fclass%2Fmsande269%2Fnotes%2F3-16-01_Six_Sigma.ppt&ei=iwTpVPSoJceZNsDFgpAM&usg=AFQjCNGRhNBMMJC0EOdzi4ooW5TMCUSFZQ&sig2=unPWKacTCLXTMbG26bhmNw&bvm=bv.86475890,d.eXY)
+
+Additionally, the following textbook was used:
+**Practitioner's Guide to Statistics and Lean Six Sigma for Process Improvements** by Mikel J. Harry, Prem S. Mann, Ofelia C. De Hodgins, Richard L. Hulbert, and Christopher J. Lacke.  Published in 2010 by Wiley.
+
+
+
+
+
